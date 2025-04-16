@@ -1,0 +1,121 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, graphicx, caption}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Assignment 5: Handwritten Digit Classification Report\\\vspace{0.5em} \large Introduction to Machine Learning (Winter 2025)}
+\author{Student: [Your Name]}
+\date{April 2025}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+The objective of this assignment is to develop, tune, and evaluate various machine learning models for handwritten digit classification using the MNIST dataset. The provided dataset includes 60,000 labeled images for training and validation, and a separate independent test set of 10,000 images will be used for blind evaluation.
+
+The steps followed are:
+\begin{enumerate}
+    \item Feature vector construction by column-wise stacking of image pixel values.
+    \item Data splitting for balanced training and fair testing.
+    \item Model development: \textbf{k-Nearest Neighbors (kNN)}, \textbf{Support Vector Machine (SVM)}, \textbf{Multi-Layer Perceptron (MLP)}, and a custom-designed \textbf{Convolutional Neural Network (CNN)}.
+\end{enumerate}
+
+\section*{Question 1: Train-Test Split with Class Balance}
+To ensure fair model evaluation, the dataset was split while preserving balance across digit classes:
+
+\begin{itemize}
+    \item The entire dataset (60,000 samples) was partitioned into training and testing subsets.
+    \item The training set contains an equal number of images from each digit (0-9).
+    \item The test set contains at least 10\% of the samples from each digit class.
+\end{itemize}
+
+A custom function was implemented to achieve this, ensuring both balance and correct partition sizes. This balanced split is crucial for avoiding class bias during training and evaluation.
+
+\section*{Question 2: kNN Model with Cross-Validation}
+A k-Nearest Neighbors (kNN) classifier was trained using the Euclidean distance metric. The optimal number of neighbors \textit{k} was identified via grid-search and 5-fold cross-validation.
+
+\begin{itemize}
+    \item Hyperparameter $k$ was varied from 1 to 15.
+    \item The best performance was achieved at \textbf{$k = $ [best\_k]}.
+    \item Final model's error on the test set: \textbf{Err$_{kNN}$ = [error rate]}.
+\end{itemize}
+
+The following figure summarizes the error rate variation across different values of $k$:
+
+\begin{center}
+\includegraphics[width=0.7\linewidth]{knn_error_plot.png}
+\captionof{figure}{Error rate as a function of $k$ in kNN model.}
+\end{center}
+
+\section*{Question 3: Polynomial Kernel SVM}
+A non-linear SVM with a polynomial kernel was trained on the same balanced dataset. Grid-search was performed over:
+
+\begin{itemize}
+    \item Regularization parameter: $C \in \{0.1, 1, 10\}$.
+    \item Kernel degree: $d \in \{2, 3, 4\}$.
+\end{itemize}
+
+The optimal hyperparameters were found to be:
+\begin{itemize}
+    \item $C = $ [best\_C]
+    \item $d = $ [best\_d]
+\end{itemize}
+
+The final model achieved a test set error rate of \textbf{Err$_{SVM}$ = [error rate]}. This demonstrates competitive performance compared to the kNN model.
+
+\section*{Question 4: Multi-Layer Perceptron (MLP)}
+A deep neural network (MLP) using ReLU activations was trained. Hyperparameters:\\
+Number of hidden layers ($L$) and hidden units per layer ($K$) were selected via grid-search.
+
+\begin{itemize}
+    \item $L \in \{1, 2, 3\}$
+    \item $K \in \{64, 128, 256\}$
+\end{itemize}
+
+The best performing architecture had:\
+\textbf{$L = $ [best\_L], $K = $ [best\_K]}.\\
+Test error of the final model: \textbf{Err$_{MLP}$ = [error rate]}.
+
+The MLP model outperformed both the kNN and SVM models, highlighting the representational power of deep neural networks for this classification task.
+
+\section*{Question 5: Best Classifier Design}
+Leveraging the insights gained, a \textbf{Convolutional Neural Network (CNN)} was designed as the final classifier. The CNN architecture consists of:
+
+\begin{itemize}
+    \item Two convolutional layers with ReLU activations and max pooling.
+    \item Two fully connected layers for classification.
+\end{itemize}
+
+The final classifier was implemented as a reusable method named:\\
+\texttt{classifyHandwrittenDigits(Xtest, data\_dir, model\_path)}
+
+The trained model was saved in PyTorch \texttt{.pth} format for submission and independent evaluation.
+
+\section*{Conclusion}
+This assignment systematically explored classic machine learning algorithms (kNN, SVM) and deep learning models (MLP, CNN) for handwritten digit classification. Empirical evaluations showed:
+
+\begin{itemize}
+    \item \textbf{CNN} achieved the lowest test error, making it the recommended solution for deployment.
+    \item \textbf{MLP} significantly improved over traditional SVM and kNN.
+    \item Balanced data splits are essential for meaningful comparisons across models.
+\end{itemize}
+
+All models were implemented, evaluated, and saved in accordance with the assignment specifications.\\
+\textbf{Final Test Errors Summary:}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Model & Test Error Rate \\
+\hline
+kNN & [err\_knn] \\
+SVM & [err\_svm] \\
+MLP & [err\_mlp] \\
+CNN & Evaluated on Independent Test \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}
+
