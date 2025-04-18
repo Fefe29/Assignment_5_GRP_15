@@ -39,14 +39,17 @@ print("\n")
 
 # Question 2: kNN Model with Cross-Validation
 print("=== QUESTION 2 === ")
-
+#Uncomment the following lines to perform hyperparameter tuning
 """param_grid = {'n_neighbors': list(range(1, 16))}
 knn = KNeighborsClassifier(metric='euclidean')
 grid_knn = GridSearchCV(knn, param_grid, cv=5, scoring='accuracy', verbose=2)
 grid_knn.fit(X_train, y_train)
 best_k = grid_knn.best_params_['n_neighbors']
-print(f"Best k: {best_k}")
+print(f"Best k: {best_k}")"""
 
+
+# Uncomment the following lines to plot error vs k
+"""
 # Plot error vs k
 results = grid_knn.cv_results_
 mean_test_errors = 1 - np.array(results['mean_test_score'])
@@ -70,7 +73,7 @@ print("\n")
 
 #  Question 3: Polynomial Kernel SVM
 print("=== QUESTION 3 === ")
-
+#uncomment the following lines to perform hyperparameter tuning
 """param_grid_svm = {
     'C': [0.1, 1, 10, 100, 1000],
     'degree': [2, 3, 4],
@@ -161,8 +164,7 @@ print("\n")
 #Question 5 : Best Classifier#
 print("=== QUESTION 3 === ")
 
-#===Q5===#
-
+# Same structure as the saved model
 class CNNNet(nn.Module):
     def __init__(self):
         super(CNNNet, self).__init__()
