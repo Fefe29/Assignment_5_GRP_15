@@ -34,7 +34,7 @@ A kNN classifier was trained using the Euclidean distance metric. Hyperparameter
 
 \begin{itemize}
   \item \textbf{Best k:} 3
-  \item \textbf{Test Error Rate:} 0.0319
+  \item \textbf{Test Error Rate:} 0.03
 \end{itemize}
 
 The tuning process showed clear performance degradation for both very small and very large values of \(k\). Using \(k=3\) achieved a robust balance between bias and variance.
@@ -50,7 +50,7 @@ A Support Vector Machine (SVM) with a polynomial kernel was trained for the same
 
 \begin{itemize}
   \item \textbf{Best Parameters:} $C=100$, $degree=2$
-  \item \textbf{Test Error Rate:} 0.0224
+  \item \textbf{Test Error Rate:} 0.02
 \end{itemize}
 
 This model outperformed kNN, suggesting the polynomial kernel was highly effective in capturing the complex boundaries of digit data.
@@ -74,7 +74,7 @@ L=3, K=256 => Error Rate: 0.2039
 
 \begin{itemize}
   \item \textbf{Best Setting:} 2 hidden layers, 128 units per layer
-  \item \textbf{MLP Test Error Rate:} 0.2027
+  \item \textbf{MLP Test Error Rate:} 0.2
 \end{itemize}
 
 Compared to kNN and SVM, the MLP underperformed in this setup, suggesting the need for further tuning or architectural changes.
@@ -96,9 +96,9 @@ The table below summarizes the test error rates of the different classifiers:
 \hline
 \textbf{Model} & \textbf{Error Rate} \\
 \hline
-kNN & 0.0319 \\
-SVM (Poly Kernel) & 0.0224 \\
-MLP & 0.2027 \\
+kNN & 0.03 \\
+SVM (Poly Kernel) & 0.02 \\
+MLP & 0.2 \\
 CNN (Best Classifier) & 0.0063 \\
 \hline
 \end{tabular}

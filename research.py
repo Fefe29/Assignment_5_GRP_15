@@ -6,6 +6,7 @@ import numpy as np
 from torch.utils.data import DataLoader, TensorDataset, random_split
 from sklearn.metrics import accuracy_score
 
+#research for question 5
 # Define MLP
 class MLPNet(nn.Module):
     def __init__(self):
