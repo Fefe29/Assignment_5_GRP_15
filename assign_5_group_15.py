@@ -143,7 +143,7 @@ print(f"MLP Test Error Rate: {best_err:.4f}")
 torch.save(best_model.state_dict(), 'final_mlp_model.pth')
 
 #===Q5===#
-# Même structure que ton modèle sauvegardé
+
 class CNNNet(nn.Module):
     def __init__(self):
         super(CNNNet, self).__init__()
