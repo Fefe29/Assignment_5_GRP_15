@@ -1,4 +1,4 @@
-# === Import required libraries ===
+#Import required libraries
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split, GridSearchCV
@@ -11,14 +11,15 @@ import torch.nn as nn
 import torch.optim as optim
 
 
-# === Load MNIST Data ===
+# Load MNIST Data
 X = np.load('Data/mnist_train_data.npy')  # Shape: (60000, 28, 28)
 y = np.load('Data/mnist_train_labels.npy')  # Shape: (60000,)
 
-# === Convert Images to Feature Vectors (Column-wise stacking) ===
+# Convert Images to Feature Vectors (Column-wise stacking)
 X_features = X.reshape(X.shape[0], -1, order='F')  # Column-stacked
 
-# === Question 1: Train-Test Split with Balancing ===
+# Question 1: Train-Test Split with Balancing
+print("=== QUESTION 1 === ")
 def create_balanced_split(X, y, test_size=0.2):
     X_train, X_test, y_train, y_test = [], [], [], []
     for digit in range(10):
@@ -32,24 +33,19 @@ def create_balanced_split(X, y, test_size=0.2):
     return np.array(X_train), np.array(X_test), np.array(y_train), np.array(y_test)
 
 X_train, X_test, y_train, y_test = create_balanced_split(X_features, y)
-
 print(f"Training samples: {len(X_train)}, Test samples: {len(X_test)}")
+print("\n")
 
-# === Question 2: kNN Model with Cross-Validation ===
-param_grid = {'n_neighbors': list(range(1, 16))}
+
+# Question 2: kNN Model with Cross-Validation
+print("=== QUESTION 2 === ")
+
+"""param_grid = {'n_neighbors': list(range(1, 16))}
 knn = KNeighborsClassifier(metric='euclidean')
 grid_knn = GridSearchCV(knn, param_grid, cv=5, scoring='accuracy', verbose=2)
 grid_knn.fit(X_train, y_train)
-
 best_k = grid_knn.best_params_['n_neighbors']
 print(f"Best k: {best_k}")
-
-# Train final kNN
-final_knn = KNeighborsClassifier(n_neighbors=best_k, metric='euclidean')
-final_knn.fit(X_train, y_train)
-y_pred_knn = final_knn.predict(X_test)
-err_knn = 1 - accuracy_score(y_test, y_pred_knn)
-print(f"kNN Test Error Rate: {err_knn:.4f}")
 
 # Plot error vs k
 results = grid_knn.cv_results_
@@ -59,11 +55,24 @@ plt.xlabel('k (Number of Neighbors)')
 plt.ylabel('Error Rate')
 plt.title('kNN Hyperparameter Tuning')
 plt.grid(True)
-plt.show()
+plt.show()"""
 
-# === Question 3: Polynomial Kernel SVM ===
-param_grid_svm = {
-    'C': [0.1, 1, 10],
+# Train final kNN
+best_k = 3
+print(f"Best k: {best_k}")
+final_knn = KNeighborsClassifier(n_neighbors=best_k, metric='euclidean')
+final_knn.fit(X_train, y_train)
+y_pred_knn = final_knn.predict(X_test)
+err_knn = 1 - accuracy_score(y_test, y_pred_knn)
+print(f"kNN Test Error Rate: {err_knn:.4f}")
+print("\n")
+
+
+#  Question 3: Polynomial Kernel SVM
+print("=== QUESTION 3 === ")
+
+"""param_grid_svm = {
+    'C': [0.1, 1, 10, 100, 1000],
     'degree': [2, 3, 4],
     'kernel': ['poly']
 }
@@ -73,14 +82,20 @@ grid_svm.fit(X_train, y_train)
 
 best_params_svm = grid_svm.best_params_
 print(f"Best SVM params: {best_params_svm}")
-
+"""
+best_params_svm={'C': 100, 'degree': 2, 'kernel': 'poly'}
+print(f"Best SVM params: {best_params_svm}")
 final_svm = SVC(**best_params_svm)
 final_svm.fit(X_train, y_train)
 y_pred_svm = final_svm.predict(X_test)
 err_svm = 1 - accuracy_score(y_test, y_pred_svm)
 print(f"SVM Test Error Rate: {err_svm:.4f}")
+print("\n")
 
-# === Question 4: MLP Model (PyTorch) ===
+
+#Question 4: MLP Model (PyTorch)
+print("=== QUESTION 4 === ")
+
 class MLP(nn.Module):
     def __init__(self, input_size, hidden_sizes, num_classes=10):
         super(MLP, self).__init__()
@@ -97,11 +112,11 @@ class MLP(nn.Module):
         return self.network(x)
 
 def train_mlp(hidden_layers, epochs=20):
-    model = MLP(input_size=784, hidden_sizes=hidden_layers).cuda()
+    model = MLP(input_size=784, hidden_sizes=hidden_layers)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
-    X_tensor = torch.tensor(X_train, dtype=torch.float32).cuda()
-    y_tensor = torch.tensor(y_train, dtype=torch.long).cuda()
+    X_tensor = torch.tensor(X_train, dtype=torch.float32)
+    y_tensor = torch.tensor(y_train, dtype=torch.long)
 
     for epoch in range(epochs):
         model.train()
@@ -126,7 +141,7 @@ for L in layer_options:
         hidden_structure = [K] * L
         model = train_mlp(hidden_structure, epochs=10)
         model.eval()
-        X_test_tensor = torch.tensor(X_test, dtype=torch.float32).cuda()
+        X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
         outputs = model(X_test_tensor)
         _, predicted = torch.max(outputs.data, 1)
         err = 1 - (predicted.cpu().numpy() == y_test).mean()
@@ -139,8 +154,12 @@ for L in layer_options:
 print(f"Best MLP Setting: Layers={best_setting[0]}, Units={best_setting[1]}")
 print(f"MLP Test Error Rate: {best_err:.4f}")
 
-# === Save the Final MLP Model ===
+#Save the Final MLP Model
 torch.save(best_model.state_dict(), 'final_mlp_model.pth')
+print("\n")
+
+#Question 5 : Best Classifier#
+print("=== QUESTION 3 === ")
 
 #===Q5===#
 
@@ -198,20 +217,19 @@ def classifyHandwrittenDigits(Xtest, data_dir, model_path):
 
     return predictions
 
-# === Comparison Summary ===
+#Comparison Summary
 print("\n=== Final Model Error Rates ===")
 print(f"kNN Error: {err_knn:.4f}")
 print(f"SVM Error: {err_svm:.4f}")
 print(f"MLP Error: {best_err:.4f}")
 
- #Q5#
 
-
-Xtest = np.load("Data/mnist_train_data.npy")  # si dispo
-Xtest_labels = np.load("Data/mnist_train_labels.npy")  # si dispo
+Xtest = np.load("Data/mnist_train_data.npy")
+Xtest_labels = np.load("Data/mnist_train_labels.npy")
 
 ytest = classifyHandwrittenDigits(Xtest, data_dir="Data", model_path="best_mnist_model.pth")
-print(ytest)  # Affiche les 10 premières prédictions
-# Calculer l'accuracy en comparant les prédictions avec les labels réels
-accuracy = accuracy_score(Xtest_labels, ytest)  # Compare les 10 premiers labels
+
+print(f"The first 10 predictions ytest : {ytest}")  # Prints the first 10 predictions
+# Calclute the accuracy by comparing the predictions with the real labels
+accuracy = accuracy_score(Xtest_labels, ytest)  # Compare the first 10 labels
 print(f"Accuracy on test set: {accuracy:.4f}")
